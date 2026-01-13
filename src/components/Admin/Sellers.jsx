@@ -1,38 +1,41 @@
 import { useEffect, useState } from "react";
 import apiClient from "../../utils/api-client";
 import Loader from "../Common/Loader";
+import useSellers from "../../hooks/useSellers";
 
 const Sellers = () => {
-  const [name, setName] = useState("");
-  const [sellers, setSellers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  useEffect(() => {
-    fetchSellers();
-    // setIsLoading(true);
-    // apiClient
-    //   .get("/users")
-    //   .then((res) => {
-    //     setSellers(res.data);
-    //     setIsLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     setIsLoading(false);
-    //     setError(err.message);
-    //   });
-  }, []);
+  const { data: sellers, error, isLoading } = useSellers();
 
-  const fetchSellers = async () => {
-    try {
-      setIsLoading(true);
-      const res = await apiClient.get("/users");
-      setSellers(res.data);
-      setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
-      setError(err.message);
-    }
-  };
+  const [name, setName] = useState("");
+  // const [sellers, setSellers] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState("");
+  // useEffect(() => {
+  //   fetchSellers();
+  //   // setIsLoading(true);
+  //   // apiClient
+  //   //   .get("/users")
+  //   //   .then((res) => {
+  //   //     setSellers(res.data);
+  //   //     setIsLoading(false);
+  //   //   })
+  //   //   .catch((err) => {
+  //   //     setIsLoading(false);
+  //   //     setError(err.message);
+  //   //   });
+  // }, []);
+
+  // const fetchSellers = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const res = await apiClient.get("/users");
+  //     setSellers(res.data);
+  //     setIsLoading(false);
+  //   } catch (err) {
+  //     setIsLoading(false);
+  //     setError(err.message);
+  //   }
+  // };
   const addSeller = async () => {
     const newSeller = {
       name,
@@ -75,11 +78,11 @@ const Sellers = () => {
       <button onClick={addSeller}>Add Seller</button>
 
       {isLoading && <Loader />}
-      {error && <em>{error}</em>}
+      {error && <em>{error.message}</em>}
 
       <table>
         <tbody>
-          {sellers.map((seller) => (
+          {sellers?.map((seller) => (
             <tr key={seller.id}>
               <td>{seller.name}</td>
               <td>
